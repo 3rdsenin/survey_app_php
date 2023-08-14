@@ -1,8 +1,8 @@
 <?php
 
-class SurveyController
+class QuestionController
 {
-    public function __construct(private SurveyGateway $gateway)
+    public function __construct(private QuestionGateway $gateway)
     {
     }
     
@@ -21,15 +21,15 @@ class SurveyController
     
     private function processResourceRequest(string $method, string $id): void
     {
-        $survey = $this->gateway->get($id);
+        $question = $this->gateway->get($id);
         
         switch ($method) {
             case "GET":                     
-                if ( ! $survey) {
+                if ( ! $question) {
                     http_response_code(404);
                     echo json_encode(["message" => "Survey not found"]);
                 } 
-                echo json_encode($survey);           
+                echo json_encode($question);           
                 break;
                 
             case "PATCH":
@@ -43,10 +43,10 @@ class SurveyController
                     break;
                 }
                 
-                $rows = $this->gateway->update($survey, $data);
+                $rows = $this->gateway->update($question, $data);
                 
                 echo json_encode([
-                    "message" => "Survey $id updated",
+                    "message" => "Question $id updated",
                     "rows" => $rows
                 ]);
                 break;
@@ -88,7 +88,7 @@ class SurveyController
                 
                 http_response_code(201);
                 echo json_encode([
-                    "message" => "Survey created",
+                    "message" => "Question created",
                     "id" => $id
                 ]);
                 break;
@@ -103,12 +103,20 @@ class SurveyController
     {
         $errors = [];
         
-        if ($is_new && empty($data["title"])) {
-            $errors[] = "title is required";
+        if ($is_new && empty($data["content"])) {
+            $errors[] = "Question content is required";
         }
         
-        if ($is_new && empty($data["description"])) {
-            $errors[] = "description is required";
+        if ($is_new && empty($data["author"])) {
+            $errors[] = "Question author is required";
+        }
+
+        if ($is_new && empty($data["surveyID"])) {
+            $errors[] = "Id of survey question belongs to is required";
+        }
+
+        if ($is_new && empty($data["type"])) {
+            $errors[] = "Question type is required";
         }
         return $errors;
     }

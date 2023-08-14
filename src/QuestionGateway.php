@@ -1,6 +1,6 @@
 <?php
 
-class SurveyGateway
+class QuestionGateway
 {
     private PDO $conn;
     
