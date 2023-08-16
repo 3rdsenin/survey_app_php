@@ -27,7 +27,7 @@ class QuestionController
             case "GET":                     
                 if ( ! $question) {
                     http_response_code(404);
-                    echo json_encode(["message" => "Survey not found"]);
+                    echo json_encode(["message" => "Question not found"]);
                 } 
                 echo json_encode($question);           
                 break;
